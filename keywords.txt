@@ -1,0 +1,115 @@
+\====================================================================
+Sequential Function Chart (SFC) for Emotion-Aware Healthcare Chatbot
+====================================================================
+
+\[Start]
+|
+v
++------------------+
+\|   Main Idea      |  <- Initialize orchestration via LangGraph/Agno
+\| "Emotion-Aware   |
+\|  Multimodal      |
+\|  Memory Chatbot" |
++------------------+
+|
+v
++------------------------------------------------+
+\| Emotion Detection Agent                        |  <- STT + VAD feed into emotion classifier
++------------------------------------------------+
+|
+v
++------------------------------------------------+
+\| Multimodal Memory Tagging                      |  <- Tag transcripts & emotions in vector DB
++------------------------------------------------+
+|
+v
++------------------------------------------------+
+\| Iterative Empathy Loop                         |  <- Check next user reply sentiment
++------------------------------------------------+
+|
+v
++------------------------------------------------+
+\| Specialized Multi-Agent Pipeline               |  <- Orchestrator decomposes tasks
++------------------------------------------------+
+|
+v
++------------------------------------------------+        +------------------------+
+\| Task Decomposition                              |------> | Extract Symptoms Agent |
+\|  • Parse intent                                 |        +------------------------+
+\|  • Identify sub-tasks                           |                 |
++------------------------------------------------+                  v
+\|                                                           +------------------------+
+v                                                           | Medical Retrieval Agent|
++------------------------------------------------+              +------------------------+
+\| Parallel Generation                              |                 |
+\|  • Run symptom parsing, DB lookup, response gen  |---------------->v
++------------------------------------------------+              +------------------------+
+\|                                                           | Empathy Response Agent |
+v                                                           +------------------------+
++------------------------------------------------+
+\| Orchestrated Context Sharing                   |  <- Merge outputs, maintain working memory
++------------------------------------------------+
+|
+v
++------------------------------------------------+        +------------------------+
+\| Responsive Error Handling                       |------> | Fallback Q\&A Agent     |
+\|  • Detect hallucinations                         |        +------------------------+
+\|  • Ask follow-up questions                       |                 |
++------------------------------------------------+                  v
+\|                                                           +------------------------+
+v                                                           | User Feedback Agent     |
++------------------------------------------------+
+\| Dynamic Personalization & Memory Management    |  <- Long-term vector store
++------------------------------------------------+
+|
+v
++------------------------------------------------+        +------------------------+
+\| Evolving User Profile                            |------> | Profile Update Module  |
++------------------------------------------------+        +------------------------+
+\|                                                               |
+v                                                               v
++------------------------------------------------+              +------------------------+
+\| Memory Retrieval with Context                   |              | Personalized Prompting |
++------------------------------------------------+              +------------------------+
+|
+v
++------------------------------------------------+
+\| Privacy and Control                            |  <- User review/delete memory UI
++------------------------------------------------+
+|
+v
++------------------------------------------------+        +------------------------+
+\| Edu-Tech Adaptation                             |------> | Learning History Store |
++------------------------------------------------+        +------------------------+
+|
+v
++------------------------------------------------+        +------------------------+
+\| Scalable Real-Time System Design                |------> | High Concurrency Layer |
++------------------------------------------------+        +------------------------+
+\|                                                           |
+v                                                           v
++------------------------------------------------+        +------------------------+
+\| Efficient Memory Access                         |        | Real-Time Stream Mem.  |
++------------------------------------------------+        +------------------------+
+|
+v
++------------------------------------------------+        +------------------------+
+\| Monitoring & Failover                           |------> | Model Failover Handler |
++------------------------------------------------+        +------------------------+
+|
+v
+\[End]
+======
+
+Legend:
+
+* Boxes = Functional Steps
+* Arrows = Flow of Control/Data
+
+Notes:
+• Each main block corresponds to a LangGraph node (or agent).
+• Parallel Generation runs multiple agents in parallel, merging via Orchestrator.
+• Iterative loops (e.g., Empathy Loop) iterate until user comfort increases.
+• Dynamic Memory modules use vector DB (e.g., FAISS) for storage & retrieval.
+• Monitoring & Failover ensures high availability and API fallback.
+===================================================================
