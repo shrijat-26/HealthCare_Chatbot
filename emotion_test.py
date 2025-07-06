@@ -7,7 +7,6 @@ import tempfile
 import soundfile as sf
 import os
 from faster_whisper import WhisperModel
-
 # ---------- 0. MODELS & HELPERS ---------------------------
 vad = webrtcvad.Vad(3)  # aggressive VAD
 whisper = WhisperModel("tiny", device="cpu", compute_type="int8")

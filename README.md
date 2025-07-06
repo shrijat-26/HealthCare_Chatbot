@@ -64,3 +64,11 @@ By combining these features, we create a new kind of healthcare chatbot: one tha
 * **Efficient Memory Access**
 * **Real-Time Stream Memory** 
 * **Monitoring & Failover** 
+
+## Commands to run to emotion_test.py :
+
+normalising audio flie : ffmpeg -i test1.wav -ar 16000 -ac 1 -c:a pcm_s16le test1_fixed.wav
+running FAST API : uvicorn emotion_test:app --host 0.0.0.0 --port 8000 --reload  
+running audio file : curl -X POST http://localhost:8000/emotion \
+  -F "file=@test1_fixed.wav" \
+  -H "accept: application/json"
