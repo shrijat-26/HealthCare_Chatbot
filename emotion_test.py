@@ -46,12 +46,33 @@ def remove_silence(waveform, sr=16000):
     combined = b''.join(voiced_frames)
     return np.frombuffer(combined, dtype=np.int16).astype(np.float32) / 32768
 
+import tempfile, os, soundfile as sf   # add soundfile to your imports
+
 def stt_transcribe(audio_np, sr):
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-        sf.write(tmp.name, audio_np, sr)
-        segments, _ = whisper.transcribe(tmp.name)
-        os.unlink(tmp.name)  # clean up
-    return " ".join([seg.text for seg in segments])
+    """
+    Write NumPy audio to a temp file, run faster-whisper, return text.
+    Works on Windows: closes file before unlinking ➜ no WinError 32.
+    """
+    # 1. create a temp .wav and write the samples
+    with tempfile.NamedTemporaryFile(
+            suffix=".wav", delete=False) as tmp:       # delete=False so we can reopen later
+        sf.write(tmp, audio_np, sr)                    # write & flush
+        tmp_path = tmp.name                           # remember path
+
+    # 2. run Whisper *after* the 'with' block (file is now closed!)
+    segments, _ = whisper.transcribe(tmp_path)
+
+    # 3. clean up
+    os.remove(tmp_path)
+
+    return " ".join(seg.text for seg in segments)
+
+# def stt_transcribe(audio_np, sr):
+#     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+#         sf.write(tmp.name, audio_np, sr)
+#         segments, _ = whisper.transcribe(tmp.name)
+#         os.unlink(tmp.name)  # clean up
+#     return " ".join([seg.text for seg in segments])
 
 def text_probs(text):
     inp = tokenizer(text, return_tensors="pt")
