@@ -1,0 +1,22 @@
+# Ignore environment variable files
+.env
+env
+prototype/env
+prototype/.env
+
+# Python cache my parshav bhaya
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# Generated files
+*.csv
+*.log
+
+# IDE files
+.vscode/
+.idea/
