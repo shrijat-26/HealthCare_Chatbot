@@ -8,6 +8,8 @@ import soundfile as sf
 import os
 from faster_whisper import WhisperModel
 from datetime import datetime
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # ---------- 0. MODELS & HELPERS ---------------------------
 vad = webrtcvad.Vad(3)
