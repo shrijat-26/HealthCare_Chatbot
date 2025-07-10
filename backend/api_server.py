@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Request
+from fastapi import FastAPI, UploadFile, File, Request, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
@@ -45,7 +45,7 @@ async def handle_text(request: Request):
     return {"answer": bot_response}
 
 @app.post("/voice")
-async def handle_audio(file: UploadFile = File(...), user_id: str = "default_user"):
+async def handle_audio(file: UploadFile = File(...), user_id: str = Form("default_user")):
     ensure_user_profile(user_id)
     contents = await file.read()
     audio_bytes = io.BytesIO(contents)
