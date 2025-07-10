@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 export default function Nav() {
   return (
     <nav className="fixed flex w-full items-center justify-between bg-background p-6 md:bg-transparent">
-      <h1>InsureWise</h1>
+      <h1>Kare.ai</h1>
       <div className="flex items-center gap-4">
         <Link
           href="https://github.com/rraj-official/quark-hackathon-frontend.git"

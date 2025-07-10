@@ -117,7 +117,7 @@ export default function ChatInput({
             rel="noopener noreferrer"
             className="md:hover:text-nvidia underline underline-offset-2 transition-all duration-150 ease-linear"
           >
-            Wissen Technology
+            QuantumWar Technologies
           </a>
         </p>
       </div>

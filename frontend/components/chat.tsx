@@ -142,10 +142,10 @@ export default function Chat() {
             rel="noopener noreferrer"
             className="hover:text-nvidia hover:cursor-pointer transition-all duration-150 ease-linear"
           >
-            InsureWise
+            Kare.ai
           </a>
         </h1>
-        <h2 className="text-center text-nvidia">by Wissen Technology</h2>
+        <h2 className="text-center text-nvidia">by QuantumWar</h2>
         <div className="mt-6 flex items-center justify-center gap-4">
           <IoLogoVercel className="size-20" />
         </div>
@@ -154,17 +154,13 @@ export default function Chat() {
           <h2 className="text-base font-medium">Points to note:</h2>
           <ul className="ml-6 mt-2 flex list-disc flex-col items-start gap-2.5 text-sm text-primary/80">
             <li>
-              <span className="text-nvidia font-medium">Insurewise</span>{" "}
-              is designed to scale effortlessly and supports multiple languages, enabling users from diverse regions to access relevant life insurance information.
+              Introducing your <span className="text-nvidia font-medium">Emotion‑Aware Healthcare Companion</span>, a next‑generation chat interface that understands not just what you say, but how you feel.
             </li>
             <li>
-              Built on an open-source framework, Insurewise ensures flexibility, transparency, and cost-efficiency, promoting continuous community contributions and improvements.
+              As you type or speak, our real‑time emotion meter visualizes your mood, while intelligent symptom extraction and RAG‑powered medical retrieval deliver personalized diagnostic insights.
             </li>
             <li>
-              By leveraging a small language model, Insurewise provides quick and contextually relevant responses, ensuring efficient interaction even with large volumes of queries.
-            </li>
-            <li>
-              The RAG-powered backend enables Insurewise to pull the latest, accurate information on life insurance plans from leading agencies like LIC and MaxLife, delivering real-time, reliable insights.
+              Experience compassionate, tone‑adaptive responses and book appointments with nearby specialists in just a few clicks—right within the conversation.
             </li>
           </ul>
         </div>

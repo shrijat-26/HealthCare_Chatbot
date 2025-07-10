@@ -9,9 +9,9 @@ import { Analytics } from "@vercel/analytics/react";
 const FigtreeFont = Figtree({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "InsureWise",
+  title: "Kare.ai",
   description:
-    "InsureWise",
+    "Kare.ai",
 };
 
 export default function RootLayout({
