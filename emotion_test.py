@@ -11,7 +11,7 @@ from datetime import datetime
 
 # ---------- 0. MODELS & HELPERS ---------------------------
 vad = webrtcvad.Vad(3)
-whisper = WhisperModel("tiny", device="cpu", compute_type="int8")
+whisper = WhisperModel("medium", device="cpu", compute_type="int8")
 
 smile = opensmile.Smile(
     feature_set=opensmile.FeatureSet.GeMAPSv01b,

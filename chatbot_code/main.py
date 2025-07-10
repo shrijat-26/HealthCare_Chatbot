@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import soundfile as sf
+import sounddevice as sd
 from orchestrator import chatbot
 
 def load_audio_file(file_path):
@@ -12,6 +13,14 @@ def load_audio_file(file_path):
     except Exception as e:
         print(f"Error loading audio: {e}")
         return None, None
+
+def record_audio(duration=10, sr=16000):
+    print(f"\n🎙️ Recording... Speak now for {duration} seconds.")
+    audio = sd.rec(int(duration * sr), samplerate=sr, channels=1, dtype='int16')
+    sd.wait()
+    print("✅ Recording complete.\n")
+    audio = audio.flatten().astype(np.float32) / 32768
+    return audio, sr
 
 def main():
     print("🤖 Bot: Hello, how may I assist you today?")
@@ -39,26 +48,41 @@ def main():
             }
 
         elif user_input.lower().startswith("audio "):
-            filepath = user_input[6:].strip()
-            if not filepath.endswith(".wav") or not os.path.exists(filepath):
-                print("Invalid input. Please provide a valid .wav file.")
-                continue
+            command = user_input[6:].strip()
 
-            audio, sr = load_audio_file(filepath)
-            if audio is None:
-                continue
-
-            inputs = {
-                "user_input": {
-                    "type": "audio",
-                    "content": audio,
-                    "sr": sr,
-                    "filename": filepath
+            # 🎤 Use microphone
+            if command.lower() == "mic":
+                audio, sr = record_audio()
+                inputs = {
+                    "user_input": {
+                        "type": "audio",
+                        "content": audio,
+                        "sr": sr,
+                        "filename": "mic_input.wav"
+                    }
                 }
-            }
+
+            # 📁 Load from file
+            elif command.endswith(".wav") and os.path.exists(command):
+                audio, sr = load_audio_file(command)
+                if audio is None:
+                    continue
+
+                inputs = {
+                    "user_input": {
+                        "type": "audio",
+                        "content": audio,
+                        "sr": sr,
+                        "filename": command
+                    }
+                }
+
+            else:
+                print("Invalid input. Provide a valid .wav file or use 'audio mic' for microphone.")
+                continue
 
         else:
-            print("Invalid input format. Use 'text <your text>' or 'audio <yourfile.wav>'")
+            print("Invalid input format. Use 'text <your text>' or 'audio <yourfile.wav>' or 'audio mic'")
             continue
 
         final_state = chatbot.invoke(inputs)
