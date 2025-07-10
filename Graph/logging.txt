@@ -1,0 +1,12 @@
+Your Conversation Log:
+
+You: dfv
+AI: It seems like your message might be incomplete or a typo. Could you please provide more context or clarify what you meant? I'm here to help!
+
+You: my name is shrijat
+AI: Nice to meet you, Shrijat! How can I assist you today?
+
+You: what is my name
+AI: Your name is Shrijat. How can I assist you further?
+
+End of Conversation

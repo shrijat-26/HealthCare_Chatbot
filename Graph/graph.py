@@ -21,7 +21,7 @@ class AzureLLM:
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),
             api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-            deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+            deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_GPT_4o_mini"),
         )
 
     def get_response(self, messages: List[Union[HumanMessage, AIMessage]]) -> AIMessage:
@@ -69,7 +69,7 @@ def main():
         result = app.invoke({"messages": conversation_history})
         conversation_history = result["messages"]
 
-        print(result["messages"])
+        #print(result["messages"])
 
     with open("logging.txt", "w") as file:
         file.write("Your Conversation Log:\n\n")
