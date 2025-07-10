@@ -43,7 +43,7 @@ User Input (Text/Audio) → Emotion Detection → Profile Update → AI Response
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/shrijat-26/HealthCare_Chatbot
    cd emotion-aware-healthcare-chatbot
    ```
 
