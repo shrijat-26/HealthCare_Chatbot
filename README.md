@@ -4,7 +4,10 @@ An intelligent healthcare chatbot that uses emotion detection and LangGraph orch
 
 ## Video Demo 
 
+Demo of the prototype starts from the timestamp : 06:38
+
 - **Google Drive Link** : https://drive.google.com/file/d/1QKsat-9PvsgWAfMUUVBRrf_WneYtvLSI/view?usp=sharing
+- **Youtube Link (Unlisted)** : https://youtu.be/wzWh5iaRUzs
 
 ## Features
 
