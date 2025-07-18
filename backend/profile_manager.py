@@ -47,9 +47,10 @@ def ensure_user_profile(user_id: str, name: str = "Unknown", age: str = "Unknown
 # Extract health-related information using the LLM
 def extract_conditions_from_text(text: str) -> List[str]:
     system_prompt = (
-        "You are a medical assistant. From the following text, extract only the symptoms or health conditions the user is expressing. "
-        "Return them as a Python list of strings. Do not include emotions or feelings unless they are medical symptoms. "
-        "Only return the list, no explanation.\n\n"
+        "You are a highly trained medical assistant. From the following patient-written paragraph, extract all possible medical symptoms or health conditions mentioned, whether explicitly stated or implied. This includes physical symptoms, psychological symptoms, behavioral signs, neurological issues, or any detail relevant to medical diagnosis or history."
+        "Do not exclude symptoms that are described in layman terms or as everyday experiences if they could be medically relevant."
+        "Return only a Python list of strings, each representing a distinct symptom or health condition. Do not include general emotions or vague feelings unless they clearly indicate a medical concern."
+        "Only return the list — no explanations, no summaries.\n\n"
         f"Text: \"{text}\""
     )
 
