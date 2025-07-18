@@ -22,3 +22,9 @@ assessli_frontend/healthcare_chatbot _frontend/node_modules
 # IDE files
 .vscode/
 .idea/
+
+backend/chat_memory/
+backend/myenv312/
+backend/user_profiles.json
+frontend/.next/
+frontend/node_modules/

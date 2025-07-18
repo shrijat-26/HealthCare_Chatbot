@@ -9,7 +9,7 @@ export default function Nav() {
       <h1>Kare.ai</h1>
       <div className="flex items-center gap-4">
         <Link
-          href="https://github.com/rraj-official/quark-hackathon-frontend.git"
+          href="https://github.com/shrijat-26/HealthCare_Chatbot"
           target="_blank"
           rel="noopener noreferrer">
           <Button
