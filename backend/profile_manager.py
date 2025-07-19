@@ -48,7 +48,7 @@ def ensure_user_profile(user_id: str, name: str = "Unknown", age: str = "Unknown
 def extract_conditions_from_text(text: str) -> List[str]:
     system_prompt = (
         "You are a highly trained medical assistant. From the following patient-written paragraph, extract all possible medical symptoms or health conditions mentioned, whether explicitly stated or implied. This includes physical symptoms, psychological symptoms, behavioral signs, neurological issues, or any detail relevant to medical diagnosis or history."
-        "Do not exclude symptoms that are described in layman terms or as everyday experiences if they could be medically relevant. All pterms like sick , pain, sore throat should be captured. "
+        "Do not exclude symptoms that are described in layman terms or as everyday experiences if they could be medically relevant. All pterms like sick , pain, sore throat, body aches, fever, cough, cold, headache, etc should be captured. "
         "Return only a Python list of strings, each representing a distinct symptom or health condition. Do not include general emotions or vague feelings unless they clearly indicate a medical concern."
         "Only return the list — no explanations, no summaries.\n\n"
         f"Text: \"{text}\""

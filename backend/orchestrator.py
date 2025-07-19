@@ -71,20 +71,41 @@ def detect_emotion_node(state: ChatState, config: Dict) -> ChatState:
         "transcript": result["transcript"]
     }
 
+# # --------- 5. Node: Generate Response -----
+# def detect_emotion_node(state: ChatState, config: Dict) -> ChatState:
+#     user_input = state["user_input"]
+#     thread_id = config.get("configurable", {}).get("thread_id", "default_user")
+
+#     result = detect_emotion(user_input)
+
+#     # Show transcript if it's audio
+#     if user_input["type"] == "audio":
+#         print(f"\n📝 You (Transcript): {result['transcript']}\n")
+
+#     # Ensure profile exists and log new symptoms
+#     ensure_user_profile(thread_id)
+#     log_conditions(thread_id, result["transcript"])
+
+#     return {
+#         **state,
+#         "emotion": result["emotion"],
+#         "valence": result["valence"],
+#         "arousal": result["arousal"],
+#         "transcript": result["transcript"]
+#     }
+
 # --------- 5. Node: Generate Response -----
 def generate_response_node(state: ChatState, config: Dict) -> ChatState:
     thread_id = config.get("configurable", {}).get("thread_id", "default_user")
     memory = get_memory(thread_id)
     profile = load_user_profile(thread_id)
 
-    # Get user message and emotion context
     user_msg = HumanMessage(content=state["transcript"])
     emotion = state["emotion"]
 
-    # Create system message with profile
+    # Format profile context
     conditions = profile.get('conditions', [])
     formatted_conditions = ', '.join([c["condition"] for c in conditions]) if conditions else "None"
-
     profile_str = (
         f"User Profile:\n"
         f"- Name: {profile.get('name', 'Unknown')}\n"
@@ -92,19 +113,38 @@ def generate_response_node(state: ChatState, config: Dict) -> ChatState:
         f"- Known Conditions: {formatted_conditions}\n\n"
     )
 
-    system_msg = HumanMessage(content=(
-        profile_str +
-        f"You are a highly empathetic healthcare assistant. "
-        f"The user's current emotional state is '{emotion}'. "
-        "Respond empathetically and supportively while still being helpful."
-    ))
+    # Generate emotion-specific system prompt
+    def get_emotion_prompt(emotion: str) -> str:
+        emotion = emotion.lower()
+        if emotion in ["sad", "angry", "anxious", "frustrated", "upset", "negative"]:
+            return (
+                f"{profile_str}"
+                "You are a calm and supportive healthcare assistant. "
+                f"The user is currently feeling {emotion}. "
+                "Respond with empathy, be brief, comforting, and directly address their concerns."
+            )
+        elif emotion in ["happy", "excited", "relieved","positive"]:
+            return (
+                f"{profile_str}"
+                "You are a warm and encouraging healthcare assistant. "
+                f"The user is currently feeling {emotion}. "
+                "Respond positively, include relevant health information, and feel free to elaborate helpfully."
+            )
+        else:  # neutral or unrecognized emotion
+            return (
+                f"{profile_str}"
+                "You are a helpful healthcare assistant. "
+                f"The user is currently feeling {emotion}. "
+                "Respond clearly, respectfully, and offer relevant medical guidance or follow-up questions.Be concise in your response & talk to them as a friend."
+            )
 
-    # Combine memory messages + new prompt
+    system_msg = HumanMessage(content=get_emotion_prompt(emotion))
+
+    # Add to memory and get LLM response
     memory.add_message(user_msg)
     history = memory.messages[-10:]
     full_prompt = [system_msg] + history
 
-    # LLM response
     response = llm.invoke(full_prompt)
     memory.add_message(response)
 
