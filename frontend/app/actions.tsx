@@ -3,6 +3,40 @@
 
 import { CoreMessage } from "ai";
 
+export async function checkUserExists(user_id: string) {
+  const response = await fetch("http://127.0.0.1:8000/check-user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user_id }),
+  });
+  
+  if (!response.ok) {
+    throw new Error("Failed to check user existence");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+export async function createUserProfile(user_id: string, name: string, age: string) {
+  const response = await fetch("http://127.0.0.1:8000/create-profile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user_id, name, age }),
+  });
+  
+  if (!response.ok) {
+    throw new Error("Failed to create user profile");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
 export async function continueConversation(messages: CoreMessage[], user_id?: string) {
   // Perform a POST request to your local server
   console.log(messages);

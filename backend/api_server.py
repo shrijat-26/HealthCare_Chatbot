@@ -19,11 +19,56 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def ensure_user_profile(user_id):
+@app.post("/check-user")
+async def check_user(request: Request):
+    """Check if user exists and return profile status"""
+    data = await request.json()
+    user_id = data.get("user_id", "")
+    
+    if not user_id:
+        return JSONResponse(content={"error": "User ID is required"}, status_code=400)
+    
     profile = load_user_profile(user_id)
-    if not profile:
-        # Create a new profile with default values
-        save_user_profile(user_id, user_id, "unknown")
+    
+    if profile:
+        return {
+            "exists": True,
+            "profile": profile
+        }
+    else:
+        return {
+            "exists": False,
+            "profile": None
+        }
+
+@app.post("/create-profile")
+async def create_profile(request: Request):
+    """Create a new user profile"""
+    data = await request.json()
+    user_id = data.get("user_id", "")
+    name = data.get("name", "")
+    age = data.get("age", "")
+    
+    if not user_id or not name or not age:
+        return JSONResponse(content={"error": "User ID, name, and age are required"}, status_code=400)
+    
+    # Check if user already exists
+    existing_profile = load_user_profile(user_id)
+    if existing_profile:
+        return JSONResponse(content={"error": "User already exists"}, status_code=409)
+    
+    # Create new profile
+    save_user_profile(user_id, name, age)
+    
+    return {
+        "success": True,
+        "message": f"Profile created for {name}",
+        "profile": {
+            "user_id": user_id,
+            "name": name,
+            "age": age
+        }
+    }
 
 @app.post("/text")
 async def handle_text(request: Request):
@@ -32,7 +77,7 @@ async def handle_text(request: Request):
     user_id = data.get("user_id", "default_user")
     if not messages:
         return JSONResponse(content={"answer": "No message received"}, status_code=400)
-    ensure_user_profile(user_id)
+    
     last_message = messages[-1].get("content", "")
     inputs = {
         "user_input": {
@@ -46,7 +91,6 @@ async def handle_text(request: Request):
 
 @app.post("/voice")
 async def handle_audio(file: UploadFile = File(...), user_id: str = Form("default_user")):
-    ensure_user_profile(user_id)
     contents = await file.read()
     audio_bytes = io.BytesIO(contents)
     filename = file.filename.lower()

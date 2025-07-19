@@ -10,7 +10,7 @@ from langchain_openai import AzureChatOpenAI
 from langchain_community.chat_message_histories import FileChatMessageHistory
 from emotion_detector import detect_emotion
 from dotenv import load_dotenv
-from profile_manager import ensure_user_profile, log_conditions  # <-- NEW IMPORT
+from profile_manager import log_conditions  # <-- NEW IMPORT
 
 load_dotenv()
 
@@ -59,9 +59,9 @@ def detect_emotion_node(state: ChatState, config: Dict) -> ChatState:
     if user_input["type"] == "audio":
         print(f"\n📝 You (Transcript): {result['transcript']}\n")
 
-    # Ensure profile exists and log new symptoms
-    ensure_user_profile(thread_id)
-    log_conditions(thread_id, result["transcript"])
+    # Log new symptoms if transcript exists
+    if result["transcript"]:
+        log_conditions(thread_id, result["transcript"])
 
     return {
         **state,

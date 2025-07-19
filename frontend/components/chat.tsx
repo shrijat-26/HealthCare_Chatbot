@@ -8,7 +8,7 @@ import { BsNvidia } from "react-icons/bs";
 import ChatInput from "./chat-input";
 import { FaUserAstronaut } from "react-icons/fa6";
 import { IoLogoVercel } from "react-icons/io5";
-import { continueConversation, continueConversationFile } from "../app/actions";
+import { continueConversation, continueConversationFile, checkUserExists, createUserProfile } from "../app/actions";
 import { toast } from "sonner";
 import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
@@ -36,8 +36,52 @@ export default function Chat() {
   const messageEndRef = useRef<HTMLDivElement>(null);
   const [userId, setUserId] = useState<string>("");
   const [userIdInput, setUserIdInput] = useState<string>("");
+  const [showProfileForm, setShowProfileForm] = useState(false);
+  const [profileData, setProfileData] = useState({ name: "", age: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const THOUGHT_MARKER = "__THINKING__"; // marker for the animated placeholder
+
+  const handleUserIdSubmit = async () => {
+    if (!userIdInput.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      const userCheck = await checkUserExists(userIdInput.trim());
+      
+      if (userCheck.exists) {
+        // User exists, proceed to chat
+        setUserId(userIdInput.trim());
+        toast.success(`Welcome back, ${userCheck.profile.name}!`);
+      } else {
+        // User doesn't exist, show profile form
+        setShowProfileForm(true);
+      }
+    } catch (error) {
+      toast.error("Failed to check user. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleProfileSubmit = async () => {
+    if (!profileData.name.trim() || !profileData.age.trim()) {
+      toast.error("Please fill in both name and age.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await createUserProfile(userIdInput.trim(), profileData.name.trim(), profileData.age.trim());
+      setUserId(userIdInput.trim());
+      setShowProfileForm(false);
+      toast.success(`Profile created for ${profileData.name}!`);
+    } catch (error) {
+      toast.error("Failed to create profile. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,6 +152,48 @@ export default function Chat() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Show profile creation form
+  if (showProfileForm) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="bg-white dark:bg-zinc-900 p-8 rounded-lg shadow-md flex flex-col items-center gap-4">
+          <h2 className="text-2xl font-semibold">Create Your Profile</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">User ID: {userIdInput}</p>
+          <input
+            type="text"
+            className="border rounded px-4 py-2 text-lg w-full"
+            placeholder="Your Name"
+            value={profileData.name}
+            onChange={e => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+            onKeyDown={e => { if (e.key === "Enter" && profileData.name.trim() && profileData.age.trim()) handleProfileSubmit(); }}
+          />
+          <input
+            type="text"
+            className="border rounded px-4 py-2 text-lg w-full"
+            placeholder="Your Age"
+            value={profileData.age}
+            onChange={e => setProfileData(prev => ({ ...prev, age: e.target.value }))}
+            onKeyDown={e => { if (e.key === "Enter" && profileData.name.trim() && profileData.age.trim()) handleProfileSubmit(); }}
+          />
+          <button
+            className="bg-nvidia text-white px-6 py-2 rounded hover:bg-nvidia/80 transition"
+            onClick={handleProfileSubmit}
+            disabled={!profileData.name.trim() || !profileData.age.trim() || isLoading}
+          >
+            {isLoading ? "Creating..." : "Create Profile"}
+          </button>
+          <button
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            onClick={() => setShowProfileForm(false)}
+          >
+            Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show user ID input
   if (!userId) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -119,14 +205,14 @@ export default function Chat() {
             placeholder="User ID"
             value={userIdInput}
             onChange={e => setUserIdInput(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter" && userIdInput.trim()) setUserId(userIdInput.trim()); }}
+            onKeyDown={e => { if (e.key === "Enter" && userIdInput.trim()) handleUserIdSubmit(); }}
           />
           <button
             className="bg-nvidia text-white px-6 py-2 rounded hover:bg-nvidia/80 transition"
-            onClick={() => { if (userIdInput.trim()) setUserId(userIdInput.trim()); }}
-            disabled={!userIdInput.trim()}
+            onClick={handleUserIdSubmit}
+            disabled={!userIdInput.trim() || isLoading}
           >
-            Start Chatting
+            {isLoading ? "Checking..." : "Continue"}
           </button>
         </div>
       </div>
